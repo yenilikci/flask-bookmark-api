@@ -4,7 +4,7 @@ from src.constants.http_status_codes import HTTP_400_BAD_REQUEST, HTTP_409_CONFL
 from flask import Blueprint, request, jsonify
 from werkzeug.security import check_password_hash, generate_password_hash
 from src.database import User, db
-from flask_jwt_extended import create_access_token, create_refresh_token
+from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
 
 auth = Blueprint("auth", __name__, url_prefix="/api/v1/auth")
 
@@ -82,5 +82,11 @@ def login():
 
 
 @auth.get("/me")
+@jwt_required()
 def me():
-    return {"user": "me"}
+    user_id = get_jwt_identity()
+    user = User.query.filter_by(id=user_id).first()
+    return jsonify({
+        'username': user.username,
+        'email': user.email
+    }), HTTP_200_OK
