@@ -1,5 +1,7 @@
 from flask import Flask, jsonify
 import os
+from src.auth import auth
+from src.bookmarks import bookmarks
 
 
 def create_app(test_config=None):
@@ -19,5 +21,8 @@ def create_app(test_config=None):
     @app.get("/hello")
     def sayHello():
         return jsonify({'message': 'hello world'})
+
+    app.register_blueprint(auth)
+    app.register_blueprint(bookmarks)
 
     return app
