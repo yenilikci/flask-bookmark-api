@@ -9,7 +9,7 @@ bookmarks = Blueprint("bookmarks", __name__, url_prefix="/api/v1/bookmarks")
 
 
 @bookmarks.route('/', methods=['POST', 'GET'])
-@jwt_required()
+# @jwt_required()
 def handle_bookmarks():
     current_user = get_jwt_identity()
     if request.method == 'POST':

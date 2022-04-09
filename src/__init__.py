@@ -5,6 +5,7 @@ from src.auth import auth
 from src.bookmarks import bookmarks
 from src.database import db
 from flask_jwt_extended import JWTManager
+from src.constants.http_status_codes import HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_SERVER_ERROR
 
 
 def create_app(test_config=None):
@@ -44,5 +45,14 @@ def create_app(test_config=None):
             bookmark.visits = bookmark.visits + 1
             db.session.commit()
             return redirect(bookmark.url)
+
+
+    @app.errorhandler(HTTP_404_NOT_FOUND)
+    def handle_404(e):
+        return jsonify({'message': 'Not Found'}), HTTP_404_NOT_FOUND
+
+    @app.errorhandler(HTTP_500_INTERNAL_SERVER_ERROR)
+    def handle_500(e):
+        return jsonify({'message': 'Internal Server Error'}), HTTP_500_INTERNAL_SERVER_ERROR
 
     return app
